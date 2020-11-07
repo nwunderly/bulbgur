@@ -127,5 +127,6 @@ dmypy.json
 # Additional
 .idea/
 data/
+logs/
 
 auth.py

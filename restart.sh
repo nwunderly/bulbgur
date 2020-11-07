@@ -1,0 +1,1 @@
+docker restart bulbgur_main bulbgur_main
