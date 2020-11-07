@@ -5,3 +5,4 @@ aiofiles
 jinja2
 uvicorn
 fastapi
+itsdangerous
