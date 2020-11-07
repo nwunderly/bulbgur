@@ -1,0 +1,7 @@
+aiohttp
+# aiopg
+# aioredis
+aiofiles
+jinja2
+uvicorn
+fastapi
