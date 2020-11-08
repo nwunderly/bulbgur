@@ -1,6 +1,7 @@
 aiohttp
-# aiopg
+asyncpg
 # aioredis
+# aredis
 aiofiles
 jinja2
 uvicorn
