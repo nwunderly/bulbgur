@@ -11,11 +11,13 @@ from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
 from auth import SECRET_KEY, POSTGRES_PASSWORD
+from src.db import Database
 
 
 app = FastAPI(redoc_url=None, docs_url=None)
+db = Database()
+
 app.token = None
-app.db = None
 image_folder = 'data/'
 allowed_extensions = ['.png', '.jpeg', '.jpg', '.gif', '.webm', '.mp4', '.py', '.txt', '.xml', '.log', '.sh', '.exe', '.php', '.css', '.html']
 
@@ -24,19 +26,14 @@ templates = Jinja2Templates(directory="templates")
 
 @app.on_event('startup')
 async def on_ready():
-    if not app.db:
-        app.db = await asyncpg.connect(
-            user='postgres',
-            password=POSTGRES_PASSWORD,
-            database='bulbgur',
-            host='postgres',
-        )
+    if not db.is_connected:
+        await db.connect()
 
 
 @app.on_event('shutdown')
 async def cleanup():
-    if app.db:
-        await app.db.close()
+    if db.is_connected:
+        await db.close()
 
 
 @app.get('/')
@@ -58,8 +55,8 @@ async def delete_short_url(request: Request, short_code: str = None):
 async def redirect(request: Request, short_code: str = None):
     if not short_code or len(short_code) > 10:
         raise HTTPException(status_code=404)
-    elif app.db:
-        long_url = await app.db.fetchval('SELECT long_url FROM short_urls WHERE short_code=($1)', short_code)
+    elif db.is_connected:
+        long_url = await db.get_long_url(short_code)
         if not long_url:
             raise HTTPException(status_code=404)
         return RedirectResponse(long_url, status_code=301)
