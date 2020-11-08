@@ -62,7 +62,7 @@ async def redirect(request: Request, short_code: str = None):
         long_url = await app.db.fetchval('SELECT long_url FROM short_urls WHERE short_code=($1)', short_code)
         if not long_url:
             raise HTTPException(status_code=404)
-        return RedirectResponse(long_url)
+        return RedirectResponse(long_url, status_code=301)
     else:
         raise HTTPException(status_code=500)
 
