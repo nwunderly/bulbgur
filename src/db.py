@@ -19,8 +19,9 @@ class Database:
         )
 
     async def close(self):
-        await self.conn.close()
-        self.conn = None
+        if self.conn:
+            await self.conn.close()
+            self.conn = None
 
     @property
     def is_connected(self):
@@ -28,7 +29,7 @@ class Database:
 
     async def get_long_url(self, short_code):
         if not self.conn:
-            raise Exception("Not connected to the database.")
+            await self.connect()
         if short_code in self.cache:
             return self.cache[short_code]
         long_url = await self.conn.fetchval('SELECT long_url FROM short_urls WHERE short_code=($1)', short_code)

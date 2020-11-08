@@ -43,6 +43,7 @@ async def index(request: Request):
 
 @app.post('/shorten')
 async def create_short_url(request: Request):
+    # TODO: This
     return "NOT YET IMPLEMENTED"
 
 
@@ -55,13 +56,10 @@ async def delete_short_url(request: Request, short_code: str = None):
 async def redirect(request: Request, short_code: str = None):
     if not short_code or len(short_code) > 10:
         raise HTTPException(status_code=404)
-    elif db.is_connected:
-        long_url = await db.get_long_url(short_code)
-        if not long_url:
-            raise HTTPException(status_code=404)
-        return RedirectResponse(long_url, status_code=301)
-    else:
-        raise HTTPException(status_code=500)
+    long_url = await db.get_long_url(short_code)
+    if not long_url:
+        raise HTTPException(status_code=404)
+    return RedirectResponse(long_url, status_code=301)
 
 
 
