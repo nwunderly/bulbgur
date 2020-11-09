@@ -7,6 +7,7 @@ docker run -d \
  --name bulbgur_static \
  -v $PWD/logs/main:/bulbgur/logs \
  -v $PWD/data:/bulbgur/data \
+ -v $PWD/assets:/bulbgur/assets \
  --restart unless-stopped \
  bulbgur static
 
