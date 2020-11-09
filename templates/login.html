@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>bulbe.rocks | login</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon url" href="https://i.bulbe.rocks/assets/poggies.png">
+        <meta property="og:image" content="https://i.bulbe.rocks/assets/bulb.png">
+        <meta property="og:title" content="bulbe.rocks">
+        <meta name="theme-color" content="#00ff6f">
+        <meta name="description" content="rev man's site">
+    </head>
+    <body>
+        <div class="topnav">
+            <a class="active" href="/">Home</a>
+            <a class="active" href="/login">Login</a>
+        </div>
+        <div>
+            <form action="/login" , method="POST">
+                <div class="container">
+                    <div class="field">
+                        <p class="control has-icons-left has-icons-right">
+                            <input class="input" name="email" type="email" placeholder="Email" required>
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-envelope"></i>
+                              </span>
+                            <span class="icon is-small is-right">
+                                <i class="fas fa-check"></i>
+                              </span>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <input class="input" name="password" type="password" placeholder="Password" required>
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-lock"></i>
+                              </span>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <p class="control">
+                            <button class="button is-success">
+                                Login
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
