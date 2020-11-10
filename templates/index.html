@@ -15,6 +15,28 @@
             <a class="active" href="/login">Login</a>
         </div>
         <h2>Welcome to bulbe.rocks!</h2>
-        <img src="https://i.bulbe.rocks/assets/bongosaur.png">
+        <canvas id="background" class="canvas-background-image"></canvas>
+        <style>
+            html {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            body {
+                background-image: url('https://i.bulbe.rocks/assets/bongosaur.png');
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-position: top center;
+            }
+            .canvas-background-image {
+                position: absolute;
+                top: 0px;
+            }
+            .main-content {
+              background-color: white;
+            }
+          </style>
+        <script src="https://i.bulbe.rocks/js/bounce.js"></script>
+        <!-- <script src="../js/bounce.js"></script> -->
     </body>
 </html>
