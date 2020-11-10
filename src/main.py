@@ -51,6 +51,11 @@ async def cleanup():
 @app.route('/')
 async def index(request: Request):
     return templates.TemplateResponse('index.html', {'request': request})
+    
+
+@app.route('/bounce')
+async def bounce(request: Request):
+    return templates.TemplateResponse('bounce.html', {'request': request})
 
 
 @app.route('/status')

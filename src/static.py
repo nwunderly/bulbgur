@@ -6,6 +6,7 @@ app.token = None
 image_folder = 'data/'
 
 app.mount('/css', StaticFiles(directory='css'), name='css')
-app.mount('/assets', StaticFiles(directory='assets'), name='site_assets')
+app.mount('/js', StaticFiles(directory='js'), name='js')
+app.mount('/assets', StaticFiles(directory='assets'), name='assets')
 # app.mount('/image', StaticFiles(directory='data'), name='images_legacy_support')
 app.mount('/', StaticFiles(directory='data'), name='images')
