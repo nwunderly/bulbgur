@@ -3,11 +3,11 @@ import datetime
 import os
 from os.path import splitext
 
-import asyncpg
+import aiohttp
 from fastapi import FastAPI, HTTPException
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
-from starlette.responses import RedirectResponse
+from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.templating import Jinja2Templates
 
 from auth import SECRET_KEY
@@ -32,7 +32,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 @app.on_event('startup')
-async def on_ready():
+async def startup():
     if not db.is_connected:
         await db.connect()
 
@@ -60,7 +60,13 @@ async def bounce(request: Request):
 
 @app.route('/status')
 async def server_status(request: Request):
-    return f"API is online. Runtime {datetime.datetime.now() - started_at}"
+    async with aiohttp.ClientSession() as session:
+        async with session.get("https://i.bulbe.rocks/status") as resp:
+            image_server_status = resp.status == 200
+    return PlainTextResponse(f"API is online.\n"
+                             f"Runtime {datetime.datetime.now() - started_at}\n"
+                             f"Database: {'ONLINE' if db.is_connected else 'OFFLINE'}\n"
+                             f"Image Server: {'ONLINE' if image_server_status else 'OFFLINE'}")
 
 
 @app.get('/login')
@@ -71,7 +77,7 @@ async def login_screen(request: Request):
 @app.post('/authenticate')
 async def authenticate_user(request: Request):
     # TODO: this
-    return "NOT YET IMPLEMENTED"
+    return PlainTextResponse("NOT YET IMPLEMENTED")
 
 
 #######################
@@ -82,13 +88,13 @@ async def authenticate_user(request: Request):
 @app.post('/short_url/new/')
 async def new_short_url(request: Request):
     # TODO: This
-    return "NOT YET IMPLEMENTED"
+    return PlainTextResponse("NOT YET IMPLEMENTED")
 
 
 @app.route('/short_url/del/{short_code}', methods=['GET', 'DELETE'])
 async def del_short_url(request: Request, short_code: str = None):
     # TODO: This
-    return "NOT YET IMPLEMENTED"
+    return PlainTextResponse("NOT YET IMPLEMENTED")
 
 
 ######################
@@ -99,13 +105,13 @@ async def del_short_url(request: Request, short_code: str = None):
 @app.post('/file_upload/new/')
 async def new_file_upload(request: Request):
     # TODO: This
-    return "NOT YET IMPLEMENTED"
+    return PlainTextResponse("NOT YET IMPLEMENTED")
 
 
 @app.route('/file_upload/del/{image_name}', methods=['GET', 'DELETE'])
 async def del_file_upload(request: Request, image_name: str = None):
     # TODO: This
-    return "NOT YET IMPLEMENTED"
+    return PlainTextResponse("NOT YET IMPLEMENTED")
 
 
 #####################################

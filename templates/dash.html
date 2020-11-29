@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>bulbe.rocks dashboard!</title>
+    <meta property="og:title" content="bulbe.rocks">
+    <meta property="og:image" content="https://i.bulbe.rocks/image/bulb.png">
+    <link rel="icon url" href="https://i.bulbe.rocks/image/poggies.png">
+    <meta name="theme-color" content="#00ff6f">
+    <meta name="description" content="rev man's site">
+</head>
+
+<body>
+    <div class="hero-foot ">
+        <nav class="tabs is-boxed is-fullwidth is-large ">
+            <div class="container ">
+                <ul>
+                    <li class="tab is-active " onclick="openTab(event, 'Images') "><a >Images</a></li>
+                    <li class="tab " onclick="openTab(event, 'Videos') "><a >Videos</a></li>
+                    <li class="tab " onclick="openTab(event, 'Files') "><a >Files</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="container section ">
+        <div id="Images" class="content-tab " >
+            {% for i in images %}
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-info">
+                    <p class="title">Image</p>
+                    <p class="subtitle"> https://i.bulbe.rocks/image/{{i}}</p>
+                    <figure class="image is-fullwidth">
+                        <img src="https://i.bulbe.rocks/{{i}}" loading="lazy">
+                    </figure>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+        <div id="Files" class="content-tab " style="display:none ">
+            <p>{{files}}</p>
+        </div>
+    </div>
+    <script>
+        function openTab(evt, tabName) {
+            var i, x, tablinks;
+            x = document.getElementsByClassName("content-tab");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < x.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" is-active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " is-active";
+        }
+    </script>
+</body>
