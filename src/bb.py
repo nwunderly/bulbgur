@@ -41,13 +41,13 @@ async def upload(request: Request):
     if token != BB_UPLOAD_TOKEN:
         raise HTTPException(status_code=401)
 
-    filename = form["file"].filename
+    filename = form["upload_file"].filename
     extension = splitext(filename)[1]
     if extension not in allowed_extensions:
         raise HTTPException(status_code=415, detail=f"File type not supported, allowed extensions are {allowed_extensions}")
-    filename = secrets.token_urlsafe(5)
-    binary_file = open(f'{image_folder}{filename}{extension}', 'wb')
-    binary_file.write(await form['file'].read())
+    # filename = secrets.token_urlsafe(5)
+    binary_file = open(f'{image_folder}{filename}', 'wb')
+    binary_file.write(await form['upload_file'].read())
     binary_file.close()
     request.session.last_upload_status = filename
     return RedirectResponse("/")
