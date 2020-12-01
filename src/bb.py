@@ -17,7 +17,7 @@ from auth import SECRET_KEY
 allowed_extensions = ['.png', '.jpeg', '.jpg', '.gif', '.webm', '.mp4', '.py', '.txt', '.xml', '.log', '.sh', '.exe', '.php', '.css', '.html']
 
 app = FastAPI(redoc_url=None, docs_url=None)
-image_folder = 'bb-data/'
+image_folder = 'bb/'
 app.mount('/img', StaticFiles(directory='bb'), name='images')
 templates = Jinja2Templates(directory="templates")
 
