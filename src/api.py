@@ -6,7 +6,7 @@ import random
 from auth import NASA_API_KEY as key
 
 
-ROVERS = ['curiosity', 'opportunity', 'spirit']
+ROVERS = ['curiosity']#, 'opportunity', 'spirit']
 
 
 class MarsRoverPhotos:
