@@ -12,6 +12,7 @@ from starlette.templating import Jinja2Templates
 
 from auth import SECRET_KEY
 from src.db import Database
+from src.api import MarsRoverPhotos
 
 
 #############
@@ -23,6 +24,7 @@ started_at = datetime.datetime.now()
 
 app = FastAPI(redoc_url=None, docs_url=None)
 db = Database()
+mars = MarsRoverPhotos()
 
 app.token = None
 image_folder = 'data/'
@@ -50,7 +52,8 @@ async def cleanup():
 
 @app.route('/')
 async def index(request: Request):
-    return templates.TemplateResponse('index.html', {'request': request})
+    url = await mars.get_random_image()
+    return templates.TemplateResponse('index.html', {'request': request, 'bg_url': url})
     
 
 @app.route('/bounce')
