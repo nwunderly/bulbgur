@@ -25,9 +25,9 @@ templates = Jinja2Templates(directory="templates")
 @app.route('/', methods=['GET', 'POST'])
 async def index(request: Request):
     session = request.session
-    if len(session) != 0 and session.last_upload_status:
-        last_upload_status = f"<p>Successfully uploaded <a href=/img/{session.last_upload_status}>{session.last_upload_status}</a></p>"
-        request.session.last_upload_status = None
+    if (last_upload_status := session.get('last_upload_status')):
+        last_upload_status = f"<p>Successfully uploaded <a href=/img/{last_upload_status}>{last_upload_status}</a></p>"
+        request.session['last_upload_status'] = None
         return templates.TemplateResponse("bb_upload.html", {"request": request, "last_upload_status": last_upload_status})
     else:
         return templates.TemplateResponse("bb_upload.html", {"request": request, "last_upload_status": ""})
@@ -49,7 +49,7 @@ async def upload(request: Request):
     binary_file = open(f'{image_folder}{filename}', 'wb')
     binary_file.write(await form['upload_file'].read())
     binary_file.close()
-    request.session.last_upload_status = filename
+    request.session['last_upload_status'] = filename
     return RedirectResponse("/")
 
 
