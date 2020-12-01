@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="shortcut icon" href="https://i.bulbe.rocks/assets/poggies.png">
+    <title>Bikini Bottom Image Server</title>
+</head>
+
+<body>
+    {{ last_upload_status }}
+    <div>
+        <form action="/upload" , method="POST">
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password"><br>
+            <label for="file">File:</label><br>
+            <input type="file" id="file" name="file">
+        </form>
+    </div>
+</body>
+
+</html>
