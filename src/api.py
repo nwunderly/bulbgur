@@ -26,7 +26,7 @@ class MarsRoverPhotos:
                     self.max_sol[rover] = data['photo_manifest']['max_sol']
 
     def cache_empty(self):
-        return bool(self.cache and self.max_sol)
+        return not bool(self.cache and self.max_sol)
 
     async def fill_cache(self):
         self.cache = []
@@ -39,7 +39,7 @@ class MarsRoverPhotos:
                 async with session.get(f"https://api.nasa.gov/mars-photos/api/v1/rovers/{rover}/photos?sol={random.randint(1, _max)}&api_key={key}") as resp:
                     data = await resp.json()
                 if not data['photos']:
-                    return
+                    continue
                 for photo in data['photos']:
                     self.cache.append(photo['img_src'])
                 random.shuffle(self.cache[rover])
