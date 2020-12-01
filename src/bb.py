@@ -22,7 +22,7 @@ app.mount('/img', StaticFiles(directory='bb'), name='images')
 templates = Jinja2Templates(directory="templates")
 
 
-@app.get('/')
+@app.route('/', methods=['GET', 'POST'])
 async def index(request: Request):
     session = request.session
     if len(session) != 0 and session.last_upload_status:

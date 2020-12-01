@@ -11,7 +11,7 @@
 <body>
     {{ last_upload_status }}
     <div>
-        <form action="/upload" , method="POST">
+        <form enctype="multipart/form-data" action="/upload" , method="POST">
             <label for="password">Password:</label><br>
             <input type="password" id="password" name="password"><br>
             <label for="upload_file">File:</label><br>
