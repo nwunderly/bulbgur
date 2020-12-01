@@ -26,15 +26,10 @@ class MarsRoverPhotos:
                     self.max_sol[rover] = data['photo_manifest']['max_sol']
 
     def cache_empty(self):
-        if not (self.cache and self.max_sol):
-            return True
-        for photos in self.cache.values():
-            if photos:
-                return False
-        return True
+        return bool(self.cache and self.max_sol)
 
     async def fill_cache(self):
-        self.cache = dict([(rover, []) for rover in ROVERS])
+        self.cache = []
         if not self.max_sol:
             await self.get_max_sols()
 
@@ -46,12 +41,11 @@ class MarsRoverPhotos:
                 if not data['photos']:
                     return
                 for photo in data['photos']:
-                    self.cache[rover].append(photo['img_src'])
+                    self.cache.append(photo['img_src'])
                 random.shuffle(self.cache[rover])
 
     async def get_random_image(self):
         if self.cache_empty():
             await self.fill_cache()
-        rover = random.choice(ROVERS)
-        return self.cache[rover].pop()
+        return self.cache.pop()
 
