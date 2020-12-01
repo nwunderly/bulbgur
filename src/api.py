@@ -41,7 +41,7 @@ class MarsRoverPhotos:
                 if not data['photos']:
                     continue
                 for photo in data['photos']:
-                    self.cache.append(photo['img_src'])
+                    self.cache.append([photo['img_src'], photo['camera']['full_name']])
                 random.shuffle(self.cache[rover])
 
     async def get_random_image(self):

@@ -11,8 +11,3 @@ app.mount('/js', StaticFiles(directory='js'), name='js')
 app.mount('/assets', StaticFiles(directory='assets'), name='assets')
 # app.mount('/image', StaticFiles(directory='data'), name='images_legacy_support')
 app.mount('/', StaticFiles(directory='data'), name='images')
-
-
-@app.route('/status')
-async def status(request):
-    return PlainTextResponse("IMAGE SERVER IS ONLINE.")

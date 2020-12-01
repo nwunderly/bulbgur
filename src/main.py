@@ -9,6 +9,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.templating import Jinja2Templates
+from starlette.staticfiles import StaticFiles
 
 from auth import SECRET_KEY
 from src.db import Database
@@ -32,6 +33,8 @@ allowed_extensions = ['.png', '.jpeg', '.jpg', '.gif', '.webm', '.mp4', '.py', '
 
 templates = Jinja2Templates(directory="templates")
 
+app.mount('/css', StaticFiles(directory='css'), name='css')
+
 
 @app.on_event('startup')
 async def startup():
@@ -52,8 +55,8 @@ async def cleanup():
 
 @app.route('/')
 async def index(request: Request):
-    url = await mars.get_random_image()
-    return templates.TemplateResponse('index.html', {'request': request, 'bg_url': url})
+    url, camera = await mars.get_random_image()
+    return templates.TemplateResponse('index.html', {'request': request, 'rover_photo': url, 'camera': camera})
     
 
 @app.route('/bounce')
@@ -64,7 +67,7 @@ async def bounce(request: Request):
 @app.route('/status')
 async def server_status(request: Request):
     async with aiohttp.ClientSession() as session:
-        async with session.get("https://i.bulbe.rocks/status") as resp:
+        async with session.get("https://i.bulbe.rocks/poggies.png") as resp:
             image_server_status = resp.status == 200
     return PlainTextResponse(f"API is online.\n"
                              f"Runtime {datetime.datetime.now() - started_at}\n"
