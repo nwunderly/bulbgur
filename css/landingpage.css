@@ -3,12 +3,12 @@ html {
     padding: 0;
     overflow: hidden;
 }
-body {
+/* body {
     background-image: url('https://i.bulbe.rocks/assets/bongosaur.png');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: top center;
-}
+} */
 .canvas-background-image {
     position: absolute;
     top: 0px;
