@@ -20,8 +20,7 @@ class MarsRoverPhotos:
             for rover in ROVERS:
                 async with session.get(f"https://api.nasa.gov/mars-photos/api/v1/manifests/{rover}?api_key={key}") as resp:
                     if resp.status != 200:
-                        self.max_sol = None
-                        return
+                        continue
                     data = await resp.json()
                     self.max_sol[rover] = data['photo_manifest']['max_sol']
 
