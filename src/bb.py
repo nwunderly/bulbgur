@@ -25,7 +25,7 @@ templates = Jinja2Templates(directory="templates")
 @app.route('/', methods=['GET', 'POST'])
 async def index(request: Request):
     session = request.session
-    if (last_upload_status := session.get('last_upload_status')):
+    if last_upload_status := session.get('last_upload_status'):
         last_upload_status = f"Successfully uploaded https://i.bikinibottomdiscord.org/img/{last_upload_status}"
         request.session['last_upload_status'] = None
         return templates.TemplateResponse("bb_upload.html", {"request": request, "last_upload_status": last_upload_status})

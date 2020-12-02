@@ -1,12 +1,10 @@
 import aiohttp
-import asyncio
 import random
-
 
 from auth import NASA_API_KEY as key
 
 
-ROVERS = ['curiosity']#, 'opportunity', 'spirit']
+ROVERS = ['curiosity', 'opportunity', 'spirit']
 
 
 class MarsRoverPhotos:
@@ -40,8 +38,8 @@ class MarsRoverPhotos:
                 if not data['photos']:
                     continue
                 for photo in data['photos']:
-                    self.cache.append([photo['img_src'], photo['camera']['full_name']])
-                random.shuffle(self.cache[rover])
+                    self.cache.append([photo['img_src'], photo['rover'], photo['camera']['full_name'], photo['earth_date']])
+                random.shuffle(self.cache)
 
     async def get_random_image(self):
         if self.cache_empty():

@@ -14,15 +14,19 @@
         <div class="topnav">
             <a class="active" href="/">Home</a>
         </div>
-        <h2>Welcome to bulbe.rocks!</h2>
-
-        <p>
-            <a class="active" href="/login">Login</a><br>
-            <a href="/bounce">Bounce</a><br>
-            <a href="/mars">Mars Rover Photos</a><br>
-            <a href="https://paste.bulbe.rocks">Pastebin</a><br>
-            <a href="https://i.bulbe.rocks">Image </a><br>
+        <h2>Random Mars Rover Photo</h2>
+        <p class="aligncenter">
+            <h3>Rover: {{ camera }}</h3>
         </p>
-
+        <p class="aligncenter">
+            <img src="{{ rover_photo }}" alt={{rover_photo}}/>
+        </p>
+        <!-- <style>
+            .aligncenter {
+                text-align: center;
+                width: 100%;
+                position: fixed;
+            }
+        </style> -->
     </body>
 </html>

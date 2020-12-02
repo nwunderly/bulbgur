@@ -1,7 +1,4 @@
-import asyncio
 import datetime
-import os
-from os.path import splitext
 
 import aiohttp
 from fastapi import FastAPI, HTTPException
@@ -12,8 +9,8 @@ from starlette.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
 
 from auth import SECRET_KEY
-from src.db import Database
-from src.api import MarsRoverPhotos
+from src.utils.db import Database
+from src.utils.mars import MarsRoverPhotos
 
 
 #############
@@ -34,6 +31,8 @@ allowed_extensions = ['.png', '.jpeg', '.jpg', '.gif', '.webm', '.mp4', '.py', '
 templates = Jinja2Templates(directory="templates")
 
 app.mount('/css', StaticFiles(directory='css'), name='css')
+app.mount('/js', StaticFiles(directory='js'), name='js')
+app.mount('/assets', StaticFiles(directory='assets'), name='assets')
 
 
 @app.on_event('startup')
@@ -55,9 +54,17 @@ async def cleanup():
 
 @app.route('/')
 async def index(request: Request):
-    url, camera = await mars.get_random_image()
-    return templates.TemplateResponse('index.html', {'request': request, 'rover_photo': url, 'camera': camera})
-    
+    return templates.TemplateResponse('index.html', {'request': request})
+
+
+@app.route('/mars')
+async def mars_rover_photo(request: Request):
+    url, rover, camera, earth_date = await mars.get_random_image()
+    return templates.TemplateResponse(
+        'mars.html', 
+        {'request': request, 'rover_photo': url, 'rover': rover, 'camera': camera, 'earth_date': earth_date}
+    )
+
 
 @app.route('/bounce')
 async def bounce(request: Request):
