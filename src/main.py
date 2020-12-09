@@ -128,7 +128,7 @@ async def new_short_url(request: Request):
         long_url = request.query_params['long_url']
         short_code = request.query_params.get('short_code')
         short_code = await db.new_short_url(long_url, short_code)
-        return PlainTextResponse("https://bulbe.rocks/"+short_code)
+        return {'short_code': short_code, 'long_url': long_url}
     else:
         raise HTTPException(status_code=401)
 

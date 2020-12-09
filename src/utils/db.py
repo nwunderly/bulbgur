@@ -44,7 +44,7 @@ class Database:
             await self.connect()
         current_short_code = await self.conn.fetchval('SELECT short_code FROM short_urls WHERE long_url=($1)', long_url)
         if current_short_code:
-            return short_code
+            return current_short_code
         if not short_code:
             short_code = secrets.token_hex(5)
         await self.conn.execute('INSERT INTO short_urls (short_code, long_url, created_at) VALUES ($1, $2, now())', short_code, long_url)
