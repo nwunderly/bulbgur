@@ -127,7 +127,7 @@ async def new_short_url(request: Request):
     if request.headers.get('x-authorization') == API_KEY or request.query_params.get('api_key') == API_KEY:
         long_url = request.query_params['long_url']
         short_code = request.query_params.get('short_code') or secrets.token_urlsafe(5)
-        await db.new_short_url(long_url, short_code)
+        short_code = await db.new_short_url(long_url, short_code)
         return {'short_code': short_code, 'long_url': long_url}
     else:
         raise HTTPException(status_code=401)
