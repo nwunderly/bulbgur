@@ -147,12 +147,11 @@ async def new_file_upload(request: Request):
         extension = splitext(filename)[1]
         if extension not in allowed_extensions:
             raise HTTPException(status_code=415, detail=f"File type not supported. Allowed extensions: {allowed_extensions}")
-        folder = image_folder
         filename = secrets.token_urlsafe(5)
         binary_file = open(f'{image_folder}{filename}{extension}', 'wb')
         binary_file.write(await form['upload_file'].read())
         binary_file.close()
-        return {"filename": filename, "extension": extension, "folder": folder}
+        return {"filename": filename, "extension": extension}
     else:
         raise HTTPException(status_code=401)
 
