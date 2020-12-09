@@ -86,7 +86,7 @@ async def server_status(request: Request):
                              f"Image Server: {'ONLINE' if image_server_status else 'OFFLINE'}")
 
 
-@app.get('/login')
+@app.route('/login')
 async def login_screen(request: Request):
     return templates.TemplateResponse('login.html', {'request': request})
 
@@ -104,7 +104,7 @@ async def authenticate_user(request: Request):
         raise HTTPException(status_code=401)
 
 
-@app.get('/dash')
+@app.route('/dash')
 async def dash(request: Request):
     session = request.session
     if len(session) != 0:
@@ -122,10 +122,15 @@ async def dash(request: Request):
 #######################
 
 
-@app.post('/short_url/new/')
+@app.route('/short_url/new/', methods=['GET', 'POST'])
 async def new_short_url(request: Request):
-    # TODO: This
-    return PlainTextResponse("NOT YET IMPLEMENTED")
+    if request.headers.get('x-authorization') == API_KEY or request.query_params.get('api_key') == API_KEY:
+        long_url = request.query_params['long_url']
+        short_code = request.query_params.get('short_code') or secrets.token_urlsafe(5)
+        await db.new_short_url(long_url, short_code)
+        return {'short_code': short_code, 'long_url': long_url}
+    else:
+        raise HTTPException(status_code=401)
 
 
 @app.route('/short_url/del/{short_code}', methods=['GET', 'DELETE'])
