@@ -1,6 +1,9 @@
-import datetime
-
+import os
 import aiohttp
+import datetime
+import secrets
+
+from os.path import splitext
 from fastapi import FastAPI, HTTPException
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
@@ -8,9 +11,9 @@ from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
 
-from auth import SECRET_KEY
-from src.utils.db import Database
-from src.utils.mars import MarsRoverPhotos
+from auth import SECRET_KEY, EMAIL, PASSWORD, API_KEY
+from .utils.db import Database
+from .utils.mars import MarsRoverPhotos
 
 
 #############
@@ -33,6 +36,7 @@ templates = Jinja2Templates(directory="templates")
 app.mount('/css', StaticFiles(directory='css'), name='css')
 app.mount('/js', StaticFiles(directory='js'), name='js')
 app.mount('/assets', StaticFiles(directory='assets'), name='assets')
+app.mount('/i', StaticFiles(directory=image_folder), name='images')
 
 
 @app.on_event('startup')
@@ -89,8 +93,28 @@ async def login_screen(request: Request):
 
 @app.post('/authenticate')
 async def authenticate_user(request: Request):
-    # TODO: this
-    return PlainTextResponse("NOT YET IMPLEMENTED")
+    session = request.session
+    form = await request.form()
+    if form['email'] == EMAIL and form['password'] == PASSWORD:
+        token = secrets.token_urlsafe()
+        app.token = token
+        session['token'] = token
+        return RedirectResponse('/dash')
+    else:
+        raise HTTPException(status_code=401)
+
+
+@app.get('/dash')
+async def dash(request: Request):
+    session = request.session
+    if len(session) != 0:
+        if session['token'] == app.token:
+            images = os.listdir(image_folder)
+            return templates.TemplateResponse("dash.html", {"request": request, "images": images})
+        else:
+            raise HTTPException(status_code=401)
+    else:
+        raise HTTPException(status_code=401)
 
 
 #######################
@@ -117,8 +141,20 @@ async def del_short_url(request: Request, short_code: str = None):
 
 @app.post('/file_upload/new/')
 async def new_file_upload(request: Request):
-    # TODO: This
-    return PlainTextResponse("NOT YET IMPLEMENTED")
+    if request.headers.get('x-authorization') == API_KEY:
+        form = await request.form()
+        filename = form["upload_file"].filename
+        extension = splitext(filename)[1]
+        if extension not in allowed_extensions:
+            raise HTTPException(status_code=415, detail=f"File type not supported. Allowed extensions: {allowed_extensions}")
+        folder = image_folder
+        filename = secrets.token_urlsafe(5)
+        binary_file = open(f'{image_folder}{filename}{extension}', 'wb')
+        binary_file.write(await form['upload_file'].read())
+        binary_file.close()
+        return {"filename": filename, "extension": extension, "folder": folder}
+    else:
+        raise HTTPException(status_code=401)
 
 
 @app.route('/file_upload/del/{image_name}', methods=['GET', 'DELETE'])

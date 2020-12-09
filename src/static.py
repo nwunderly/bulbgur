@@ -11,9 +11,9 @@ app.mount('/css', StaticFiles(directory='css'), name='css')
 app.mount('/js', StaticFiles(directory='js'), name='js')
 app.mount('/assets', StaticFiles(directory='assets'), name='assets')
 # app.mount('/image', StaticFiles(directory='data'), name='images_legacy_support')
-app.mount('/', StaticFiles(directory='data'), name='images')
+app.mount('/', StaticFiles(directory=image_folder), name='images')
 
 
-@app.post('/')
+@app.route('/')
 async def redirect(request):
     return RedirectResponse("https://bulbe.rocks")
