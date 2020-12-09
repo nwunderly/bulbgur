@@ -122,7 +122,7 @@ async def dash(request: Request):
 #######################
 
 
-@app.route('/short_url/new/', methods=['GET', 'POST'])
+@app.post('/short_url/new/')
 async def new_short_url(request: Request):
     if request.headers.get('x-authorization') == API_KEY or request.query_params.get('api_key') == API_KEY:
         long_url = request.query_params['long_url']
@@ -133,7 +133,7 @@ async def new_short_url(request: Request):
         raise HTTPException(status_code=401)
 
 
-@app.route('/short_url/del/{short_code}', methods=['GET', 'DELETE'])
+@app.get('/short_url/del/{short_code}')
 async def del_short_url(request: Request, short_code: str = None):
     # TODO: This
     return PlainTextResponse("NOT YET IMPLEMENTED")
