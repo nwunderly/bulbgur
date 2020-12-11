@@ -22,7 +22,7 @@ let bulbe = {
 (function main() {
     canvas = document.getElementById("background");
     ctx = canvas.getContext("2d");
-    bulbe.img.src = "https://i.bulbe.rocks/assets/bulb.png";
+    bulbe.img.src = "/assets/bulb.png";
     update();
 }
 )();

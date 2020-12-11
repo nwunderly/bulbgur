@@ -7,13 +7,10 @@ app = FastAPI(redoc_url=None, docs_url=None)
 app.token = None
 image_folder = 'data/'
 
-app.mount('/css', StaticFiles(directory='css'), name='css')
-app.mount('/js', StaticFiles(directory='js'), name='js')
-app.mount('/assets', StaticFiles(directory='assets'), name='assets')
-# app.mount('/image', StaticFiles(directory='data'), name='images_legacy_support')
-app.mount('/', StaticFiles(directory=image_folder), name='images')
-
 
 @app.route('/')
-async def redirect(request):
+async def redirect():
     return RedirectResponse("https://bulbe.rocks")
+
+
+app.mount('/', StaticFiles(directory=image_folder), name='images')
