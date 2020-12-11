@@ -9,7 +9,7 @@ image_folder = 'data/'
 
 
 @app.route('/')
-async def redirect():
+async def redirect(request):
     return RedirectResponse("https://bulbe.rocks")
 
 
