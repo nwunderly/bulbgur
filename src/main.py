@@ -161,7 +161,7 @@ async def new_file_upload(request: Request):
         raise HTTPException(status_code=401)
 
 
-@app.route('/file_upload/del/{image_name}', methods=['GET', 'DELETE'])
+@app.get('/file_upload/del/{image_name}')
 async def del_file_upload(request: Request, image_name: str = None):
     # TODO: This
     return PlainTextResponse("NOT YET IMPLEMENTED")
