@@ -3,6 +3,7 @@ import os
 from datetime import datetime, timedelta
 from fastapi import FastAPI, HTTPException
 from starlette.requests import Request
+from starlette.responses import PlainTextResponse
 
 from auth import LEADERBOARD_API_TOKEN
 
@@ -58,4 +59,4 @@ async def post_leaderboard(request: Request):
 
 @app.get('/leaderboard')
 async def get_leaderboard():
-    return LeaderboardCache.get()
+    return PlainTextResponse(LeaderboardCache.get())
