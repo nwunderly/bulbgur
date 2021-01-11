@@ -51,7 +51,7 @@ LeaderboardCache.update()
 
 
 @app.post('/leaderboard')
-def post_leaderboard(request: Request):
+async def post_leaderboard(request: Request):
     if request.headers.get("X-Authorization") != LEADERBOARD_API_TOKEN:
         raise HTTPException(401)
 
@@ -62,5 +62,5 @@ def post_leaderboard(request: Request):
 
 
 @app.get('/leaderboard')
-def get_leaderboard():
+async def get_leaderboard():
     return LeaderboardCache.get()
