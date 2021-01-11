@@ -32,7 +32,8 @@ class LeaderboardCache:
     @classmethod
     def dump(cls, json: str):
         with open(LEADERBOARD, "w") as fp:
-            cls.data = fp.write(json)
+            fp.write(json)
+            cls.data = json
 
     @classmethod
     def get(cls):
@@ -40,14 +41,9 @@ class LeaderboardCache:
             raise HTTPException(500, "Missing data.")
         return cls.data
 
-    @classmethod
-    def update(cls):
-        if not cls.last_updated or datetime.now() - cls.last_updated >= timedelta(minutes=15):
-            cls.load()
-
 
 LeaderboardCache.ensure_file_exists()
-LeaderboardCache.update()
+LeaderboardCache.load()
 
 
 @app.post('/leaderboard')
@@ -57,7 +53,6 @@ async def post_leaderboard(request: Request):
 
     body = (await request.body()).decode()
     LeaderboardCache.dump(body)
-    LeaderboardCache.update()
     return "OK"
 
 
