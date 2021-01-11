@@ -26,7 +26,7 @@ class LeaderboardCache:
     @classmethod
     def load(cls):
         with open(LEADERBOARD, "r") as fp:
-            cls.data = fp.read()
+            cls.data = fp.read().strip()
             cls.last_updated = datetime.now()
 
     @classmethod
