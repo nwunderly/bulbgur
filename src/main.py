@@ -101,7 +101,7 @@ async def authenticate_user(request: Request):
         session['token'] = token
         return RedirectResponse('/dash')
     else:
-        raise HTTPException(status_code=401)
+        raise HTTPException(401)
 
 
 @app.route('/dash')
@@ -112,9 +112,9 @@ async def dash(request: Request):
             images = os.listdir(image_folder)
             return templates.TemplateResponse("dash.html", {"request": request, "images": images})
         else:
-            raise HTTPException(status_code=401)
+            raise HTTPException(401)
     else:
-        raise HTTPException(status_code=401)
+        raise HTTPException(401)
 
 
 #######################
