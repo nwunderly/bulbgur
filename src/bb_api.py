@@ -34,7 +34,6 @@ class LeaderboardCache:
     @classmethod
     def dump(cls, data: str):
         with open(LEADERBOARD, "w") as fp:
-            fp.write(json)
             fp.write(data)
             cls.data = json.loads(data)
 
