@@ -1,9 +1,10 @@
 import os
+import json
 
 from datetime import datetime, timedelta
 from fastapi import FastAPI, HTTPException
 from starlette.requests import Request
-from starlette.responses import PlainTextResponse
+from starlette.responses import JSONResponse
 
 from auth import LEADERBOARD_API_TOKEN
 
@@ -27,14 +28,15 @@ class LeaderboardCache:
     @classmethod
     def load(cls):
         with open(LEADERBOARD, "r") as fp:
-            cls.data = fp.read().strip()
+            cls.data = json.loads(fp.read())
             cls.last_updated = datetime.now()
 
     @classmethod
-    def dump(cls, json: str):
+    def dump(cls, data: str):
         with open(LEADERBOARD, "w") as fp:
             fp.write(json)
-            cls.data = json
+            fp.write(data)
+            cls.data = json.loads(data)
 
     @classmethod
     def get(cls):
@@ -59,4 +61,4 @@ async def post_leaderboard(request: Request):
 
 @app.get('/leaderboard')
 async def get_leaderboard():
-    return PlainTextResponse(LeaderboardCache.get())
+    return JSONResponse(LeaderboardCache.get())
