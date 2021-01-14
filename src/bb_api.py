@@ -15,6 +15,21 @@ app = FastAPI(redoc_url=None, docs_url=None)
 app.token = None
 
 LEADERBOARD = 'leaderboard/leaderboard.json'
+ORIGINS = [
+    "http://bikinibottomdiscord.org",
+    "https://bikinibottomdiscord.org"
+    "http://*.bikinibottomdiscord.org",
+    "https://*.bikinibottomdiscord.org",
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class LeaderboardCache:
@@ -70,12 +85,3 @@ async def post_leaderboard(request: Request):
 @app.get('/leaderboard')
 async def get_leaderboard():
     return JSONResponse(LeaderboardCache.get())
-
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["bikinibottomdiscord.org", "*.bikinibottomdiscord.org"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
