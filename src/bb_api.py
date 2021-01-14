@@ -15,17 +15,11 @@ app = FastAPI(redoc_url=None, docs_url=None)
 app.token = None
 
 LEADERBOARD = 'leaderboard/leaderboard.json'
-ORIGINS = [
-    "http://bikinibottomdiscord.org",
-    "https://bikinibottomdiscord.org"
-    "http://*.bikinibottomdiscord.org",
-    "https://*.bikinibottomdiscord.org",
-]
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ORIGINS,
+    allow_origins="*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
