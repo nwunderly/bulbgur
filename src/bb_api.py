@@ -1,5 +1,6 @@
 import os
 import json
+import html
 
 from datetime import datetime, timedelta
 from fastapi import FastAPI, HTTPException
@@ -32,16 +33,23 @@ class LeaderboardCache:
             cls.last_updated = datetime.now()
 
     @classmethod
-    def dump(cls, data: str):
+    def dump(cls, data: dict):
         with open(LEADERBOARD, "w") as fp:
-            fp.write(data)
-            cls.data = json.loads(data)
+            json.dump(data, fp)
 
     @classmethod
     def get(cls):
         if not cls.data:
             raise HTTPException(500, "Missing data.")
         return cls.data
+
+    @classmethod
+    def update(cls, data: str):
+        data = json.loads(data)
+        for _, user in data.items():
+            user['username'] = html.escape(user['username'])
+        cls.dump(data)
+        cls.data = data
 
 
 LeaderboardCache.ensure_file_exists()
@@ -54,7 +62,7 @@ async def post_leaderboard(request: Request):
         raise HTTPException(401)
 
     body = (await request.body()).decode()
-    LeaderboardCache.dump(body)
+    LeaderboardCache.update(body)
     return "OK"
 
 
