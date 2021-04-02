@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.8-slim
 
 # give it it's own fancy directory
 RUN mkdir /bulbgur
