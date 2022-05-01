@@ -1,7 +1,7 @@
-import asyncpg
 import secrets
 from typing import Optional
 
+import asyncpg
 from auth import POSTGRES_PASSWORD
 
 
@@ -14,10 +14,10 @@ class Database:
         if self.conn:
             raise Exception("Already connected to the database.")
         self.conn = await asyncpg.connect(
-            user='postgres',
+            user="postgres",
             password=POSTGRES_PASSWORD,
-            database='bulbgur',
-            host='postgres'
+            database="bulbgur",
+            host="postgres",
         )
 
     async def close(self):
@@ -34,7 +34,9 @@ class Database:
             await self.connect()
         if short_code in self.cache:
             return self.cache[short_code]
-        long_url = await self.conn.fetchval('SELECT long_url FROM short_urls WHERE short_code=($1)', short_code)
+        long_url = await self.conn.fetchval(
+            "SELECT long_url FROM short_urls WHERE short_code=($1)", short_code
+        )
         if long_url:
             self.cache[short_code] = long_url
         return long_url
@@ -42,12 +44,17 @@ class Database:
     async def new_short_url(self, long_url, short_code=None):
         if not self.conn:
             await self.connect()
-        current_short_code = await self.conn.fetchval('SELECT short_code FROM short_urls WHERE long_url=($1)', long_url)
+        current_short_code = await self.conn.fetchval(
+            "SELECT short_code FROM short_urls WHERE long_url=($1)", long_url
+        )
         if current_short_code:
             return current_short_code
         if not short_code:
             short_code = secrets.token_hex(5)
-        await self.conn.execute('INSERT INTO short_urls (short_code, long_url, created_at) VALUES ($1, $2, now())', short_code, long_url)
+        await self.conn.execute(
+            "INSERT INTO short_urls (short_code, long_url, created_at) VALUES ($1, $2, now())",
+            short_code,
+            long_url,
+        )
         self.cache[short_code] = long_url
         return short_code
-

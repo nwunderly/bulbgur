@@ -1,20 +1,18 @@
-import os
-import json
 import html
-
+import json
+import os
 from datetime import datetime, timedelta
+
+from auth import LEADERBOARD_API_TOKEN
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from auth import LEADERBOARD_API_TOKEN
-
-
 app = FastAPI(redoc_url=None, docs_url=None)
 app.token = None
 
-LEADERBOARD = 'leaderboard/leaderboard.json'
+LEADERBOARD = "leaderboard/leaderboard.json"
 
 
 app.add_middleware(
@@ -33,8 +31,8 @@ class LeaderboardCache:
     @classmethod
     def ensure_file_exists(cls):
         if not os.path.exists(LEADERBOARD):
-            with open(LEADERBOARD, 'w') as fp:
-                fp.write('{}')
+            with open(LEADERBOARD, "w") as fp:
+                fp.write("{}")
 
     @classmethod
     def load(cls):
@@ -57,7 +55,7 @@ class LeaderboardCache:
     def update(cls, data: str):
         data = json.loads(data)
         for _, user in data.items():
-            user['username'] = html.escape(user['username'])
+            user["username"] = html.escape(user["username"])
         cls.dump(data)
         cls.data = data
 
@@ -66,7 +64,7 @@ LeaderboardCache.ensure_file_exists()
 LeaderboardCache.load()
 
 
-@app.post('/leaderboard')
+@app.post("/leaderboard")
 async def post_leaderboard(request: Request):
     if request.headers.get("X-Authorization") != LEADERBOARD_API_TOKEN:
         raise HTTPException(401)
@@ -76,6 +74,6 @@ async def post_leaderboard(request: Request):
     return "OK"
 
 
-@app.get('/leaderboard')
+@app.get("/leaderboard")
 async def get_leaderboard():
     return JSONResponse(LeaderboardCache.get())

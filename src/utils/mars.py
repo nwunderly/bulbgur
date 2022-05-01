@@ -1,26 +1,27 @@
-import aiohttp
 import random
 
+import aiohttp
 from auth import NASA_API_KEY as key
 
-
-ROVERS = ['curiosity', 'opportunity', 'spirit']
+ROVERS = ["curiosity", "opportunity", "spirit"]
 
 
 class MarsRoverPhotos:
     def __init__(self):
         self.cache = None
         self.max_sol = None
-    
+
     async def get_max_sols(self):
         self.max_sol = dict([(rover, 0) for rover in ROVERS])
         async with aiohttp.ClientSession() as session:
             for rover in ROVERS:
-                async with session.get(f"https://api.nasa.gov/mars-photos/api/v1/manifests/{rover}?api_key={key}") as resp:
+                async with session.get(
+                    f"https://api.nasa.gov/mars-photos/api/v1/manifests/{rover}?api_key={key}"
+                ) as resp:
                     if resp.status != 200:
                         continue
                     data = await resp.json()
-                    self.max_sol[rover] = data['photo_manifest']['max_sol']
+                    self.max_sol[rover] = data["photo_manifest"]["max_sol"]
 
     def cache_empty(self):
         return not bool(self.cache and self.max_sol)
@@ -33,16 +34,24 @@ class MarsRoverPhotos:
         async with aiohttp.ClientSession() as session:
             for rover in ROVERS:
                 _max = self.max_sol[rover]
-                async with session.get(f"https://api.nasa.gov/mars-photos/api/v1/rovers/{rover}/photos?sol={random.randint(1, _max)}&api_key={key}") as resp:
+                async with session.get(
+                    f"https://api.nasa.gov/mars-photos/api/v1/rovers/{rover}/photos?sol={random.randint(1, _max)}&api_key={key}"
+                ) as resp:
                     data = await resp.json()
-                if not data['photos']:
+                if not data["photos"]:
                     continue
-                for photo in data['photos']:
-                    self.cache.append([photo['img_src'], photo['rover'], photo['camera']['full_name'], photo['earth_date']])
+                for photo in data["photos"]:
+                    self.cache.append(
+                        [
+                            photo["img_src"],
+                            photo["rover"],
+                            photo["camera"]["full_name"],
+                            photo["earth_date"],
+                        ]
+                    )
                 random.shuffle(self.cache)
 
     async def get_random_image(self):
         if self.cache_empty():
             await self.fill_cache()
         return self.cache.pop()
-
